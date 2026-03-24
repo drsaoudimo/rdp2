@@ -59,8 +59,7 @@ Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/
 Remove-Item $installerPath -Force
 - name: Establish Tailscale Connection
 run: |
-# Bring up Tailscale with the provided auth key and set a unique hostname
-& "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=${{
+# Bring up Tailscale with the provided auth key and set a unique hostname & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=${{
 secrets.TAILSCALE_AUTH_KEY }} --hostname=gh-runner-$env:GITHUB_RUN_ID
 # Wait for Tailscale to assign an IP
 $tsIP = $null
@@ -81,6 +80,7 @@ Write-Host "Tailscale IP: $env:TAILSCALE_IP"
 # Test connectivity using Test-NetConnection against the Tailscale IP on port 3389
 $testResult = Test-NetConnection -ComputerName $env:TAILSCALE_IP -Port 3389
 if (-not $testResult.TcpTestSucceeded) {
+
 Write-Error "TCP connection to RDP port 3389 failed"
 exit 1
 }
